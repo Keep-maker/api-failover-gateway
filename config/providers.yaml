@@ -1,0 +1,43 @@
+﻿providers:
+  - name: "openveer"
+    base_url: "https://api.openveer.com"
+    api_key: "${OPENVEER_API_KEY}"
+    timeout: 30
+    enabled: true
+
+  - name: "deepseek"
+    base_url: "https://api.deepseek.com"
+    api_key: "${DEEPSEEK_API_KEY}"
+    timeout: 30
+    enabled: true
+
+  - name: "siliconflow"
+    base_url: "https://api.siliconflow.cn"
+    api_key: "${SILICONFLOW_API_KEY}"
+    timeout: 30
+    enabled: true
+
+routes:
+  # 按 model 名路由到指定供应商（优先级高的先匹配）
+  - pattern: "gpt-4*"
+    provider_name: "openveer"
+    priority: 100
+  - pattern: "deepseek*"
+    provider_name: "deepseek"
+    priority: 100
+  - pattern: "glm*"
+    provider_name: "siliconflow"
+    priority: 90
+  - pattern: "*"
+    provider_name: "openveer"
+    priority: 0
+
+settings:
+  # 切换策略：failover=失败才切 | conversation=按会话绑定 | round_robin=每次轮询
+  failover_strategy: "failover"
+  request_timeout: 30
+  health_check_enabled: false
+  health_check_interval: 60
+  log_level: "info"
+  host: "0.0.0.0"
+  port: 8000
